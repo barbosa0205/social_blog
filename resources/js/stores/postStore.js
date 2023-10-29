@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-
+import {  ref } from 'vue'
+import {router} from "@inertiajs/vue3"
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
 // and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
@@ -15,6 +15,11 @@ export const usePostStore = defineStore('posts', () => {
     }) => {
 
         try {
+            if(!userId) {
+                return router.visit('/login', {
+                    method: 'get'
+                })
+            }
             const resp = await axios.post(`/posts/like/${postId}`, {
                 user_id: userId,
                 post_id: postId
@@ -22,7 +27,7 @@ export const usePostStore = defineStore('posts', () => {
 
             if (resp.data.success) {
 
-                const post = recentPosts.value.data.find(post => post.id === postId)
+                const post = recentPosts.data.find(post => post.id === postId)
                 console.log(post.is_liked)
    
                     if (!post.is_liked) {
@@ -39,6 +44,18 @@ export const usePostStore = defineStore('posts', () => {
 
     }
 
+    
+    const findPostById = (id) => {
+       const post = recentPosts.value.data.find(p => p.id === id)
+       
+        return post
+    }
 
-    return { toggleLikePost, recentPosts }
+    const createCommentInPost = ({data, postId}) => {
+        const post = recentPosts.value.data.find(p => p.id === postId)
+        console.log(data)
+         post.comments = JSON.parse(JSON.stringify([...post.comments, data.data]))
+         
+    }
+    return {recentPosts, toggleLikePost, findPostById, createCommentInPost}
 })

@@ -3,8 +3,8 @@
 
    <nav class="bg-zinc-50 shadow-sm px-4 py-6 flex items-center justify-between">
 
-      <h1 class="font-bold text-2xl from-rose-600 to-purple-600 bg-gradient-to-tr bg-clip-text text-transparent">Social Blog</h1>
-
+      <Link href="/"><h1 class="font-bold text-2xl from-rose-600 to-purple-600 bg-gradient-to-tr bg-clip-text text-transparent">Social Blog</h1>
+</Link>
       <ul v-if="!user">
 <NavLink href="/login">Sign In</NavLink>
       </ul>
@@ -28,6 +28,7 @@ import { storeToRefs } from 'pinia';
 import {useAuthStore} from '@/stores/authStore'
 import {useUserStore} from '@/stores/userStore'
 import NavLink from '@/Components/NavLink.vue';
+import { Link } from '@inertiajs/vue3';
 
 
 const authStore = useAuthStore()

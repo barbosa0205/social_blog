@@ -1,7 +1,7 @@
 <template lang="">
    <main>
-    <ul v-if="recentPosts" class="px-2 flex flex-col mt-6 rounded-lg w-full">
-      <Post v-for="recentPost in recentPosts.data" :key="recentPost.id" :recentPost="recentPost"/>  
+    <ul v-if="postStore.recentPosts" class="px-2 flex flex-col mt-6 rounded-lg w-full">
+      <Post v-for="(recentPost, index) in postStore.recentPosts.data" :key="recentPost.id" :recentPost="recentPost"/>  
     </ul>
    </main>
 </template>
@@ -20,8 +20,10 @@ const  props = defineProps({
  })
 
  onMounted(() => {
-   recentPosts.value = props.recentPostsProp
+  recentPosts.value = props.recentPostsProp
  })
+
+
 
 
 </script>

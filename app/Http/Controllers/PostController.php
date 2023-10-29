@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
+use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -62,4 +64,55 @@ class PostController extends Controller
     {
         //
     }
+
+    public function likePost(Request $request) {
+
+
+        //Verify if user li ked post
+        
+        $like = Like::where('user_id', $request->user_id)->where([['likeable_id', $request->post_id], ['likeable_type', 'App\Models\Post']])->first();
+        if($like){
+            //remove like from morph table
+           $like->delete();
+           return response()->json([
+                "success" => true,
+                "message" => 'Post Disliked'
+            ]);
+    
+        } else {
+            $like = Like::create([
+                'user_id'=> $request->user_id,
+                'post_id' => $request->post_id,
+                'likeable_type' => 'App\Models\Post',
+                'likeable_id' => $request->post_id
+            ]);
+    
+            $like->save();
+            return response()->json([
+                "success" => true,
+                "messagge" => 'Post Liked',
+                "data" => $like
+            ]);
+        }
+
+        }
+
+        public function commentPost(Request $request) {
+            $newComment = Comment::create([
+                "user_id" => $request->user_id,
+                "commentable_type" => 'App\Models\Post',
+                "commentable_id" => $request->post_id,
+                "comment" => $request->comment
+            ]);
+
+            $newComment->save();
+
+            $comment = Comment::where("id", $newComment->id)->with('user')->first();
+
+            return response()->json([
+                "success" => true,
+                "messagge" => 'Post commented',
+                "data" => $comment
+            ]);
+        }
 }

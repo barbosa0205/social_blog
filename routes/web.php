@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\LikeController;
-
+use App\Http\Controllers\PostController;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -21,12 +22,17 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
 
-  $recentPosts = Post::with('user.images')->with(['isLiked'])->paginate(10);
+  $recentPosts = Post::with('user.images')->with(['isLiked'])->with('comments.user')->paginate(10);
 
     return Inertia::render('Welcome', [
         'recentPostsProp' => $recentPosts,
     ]);
 });
+
+  //Posts Routes
+  Route::post('/posts/like/{post_id}', [PostController::class,'likePost']);
+ Route::post('/posts/comment/{post_id}', [PostController::class,'commentPost']);
+
 
 Route::get('/public-page', function() {
     return Inertia::render('Public/PublicPage', []);
@@ -41,13 +47,14 @@ Route::middleware([
 
     //get user
     Route::post('/get_user', function(){
-        return response()->json([
-            'user' => Auth::user(),
-        ]);
-    } );
+       
+        $user = User::find(Auth::id());
 
-    //Like Routes
-Route::post('/posts/like/{post_id}', [LikeController::class,'Likepost']);
+        return response()->json([
+            "user" => $user
+        ]);
+       
+    } );
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
