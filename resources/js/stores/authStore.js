@@ -1,3 +1,4 @@
+import { router } from '@inertiajs/vue3'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { onMounted, reactive } from 'vue'
@@ -7,11 +8,15 @@ import { onMounted, reactive } from 'vue'
 // and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
 // the first argument is a unique id of the store across your application
 export const useAuthStore = defineStore('auth', () => {
-  
 
 
 
+    const logout = () => {
+        console.log('waSA')
+        router.post('/logout')
+        window.location.reload()
+    }
 
 
-    return {}
+    return { logout }
 })

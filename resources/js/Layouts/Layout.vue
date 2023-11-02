@@ -9,7 +9,9 @@
 <NavLink href="/login">Sign In</NavLink>
       </ul>
       <ul v-else>
-         <NavLink href="/login">Im logged</NavLink>
+         <button @click="logout">
+            <i class="ri-logout-box-r-line"></i>
+         </button>
       </ul>
  </nav>
 
@@ -25,8 +27,8 @@
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 //Stores
-import {useAuthStore} from '@/stores/authStore'
-import {useUserStore} from '@/stores/userStore'
+import { useAuthStore } from '@/stores/authStore'
+import { useUserStore } from '@/stores/userStore'
 import NavLink from '@/Components/NavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
@@ -34,8 +36,8 @@ import { Link } from '@inertiajs/vue3';
 const authStore = useAuthStore()
 const userStore = useUserStore()
 
-
-const {getUser} = userStore
+const { logout } = authStore
+const { getUser } = userStore
 
 const { user } = storeToRefs(userStore)
 
